@@ -4,47 +4,18 @@
 
 from __future__ import print_function
 
-import argparse
 import sys
 
-from deliver import metadata
+from deliver.dataset_helper import DatasetHelper
 
 
 def main(argv):
-    """Program entry point.
-
-    :param argv: command-line arguments
-    :type argv: :class:`list`
-    """
-    author_strings = []
-    for name, email in zip(metadata.authors, metadata.emails):
-        author_strings.append('Author: {0} <{1}>'.format(name, email))
-
-    epilog = '''
-{project} {version}
-
-{authors}
-URL: <{url}>
-'''.format(
-        project=metadata.project,
-        version=metadata.version,
-        authors='\n'.join(author_strings),
-        url=metadata.url)
-
-    arg_parser = argparse.ArgumentParser(
-        prog=argv[0],
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=metadata.description,
-        epilog=epilog)
-    arg_parser.add_argument(
-        '-V', '--version',
-        action='version',
-        version='{0} {1}'.format(metadata.project, metadata.version))
-
-    arg_parser.parse_args(args=argv[1:])
-
-    print(epilog)
-
+    json_path = sys.argv[1]
+    dataset_helper = DatasetHelper(json_path)
+    vehicles, jobs, matrix = dataset_helper.process_data()
+    [print(v) for v in vehicles]
+    [print(j) for j in jobs]
+    print(matrix)
     return 0
 
 
