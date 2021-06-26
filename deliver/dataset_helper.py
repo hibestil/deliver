@@ -1,5 +1,9 @@
 import json
 
+from deliver.job import Job
+from deliver.matrix import Matrix
+from deliver.vehicle import Vehicle
+
 
 class DatasetHelper:
     data = None
@@ -16,3 +20,12 @@ class DatasetHelper:
         """
         f = open(file_path, )
         return json.load(f)
+
+    def process_data(self):
+        if self.data:
+            vehicles = [Vehicle(**v) for v in self.data["vehicles"]]
+            jobs = [Job(**j) for j in self.data["jobs"]]
+            matrix = Matrix(self.data["matrix"])
+        else:
+            raise Exception("Json file is not provided")
+        return vehicles, jobs, matrix
