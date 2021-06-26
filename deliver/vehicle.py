@@ -7,3 +7,10 @@ class Vehicle:
         self.vehicle_id = id
         self.start_index = start_index
         self.capacity = capacity
+
+    def __str__(self):
+        str = "[Vehicle] :"
+        str += "\tid:{}".format(self.vehicle_id)
+        str += "\tstart_index:{}".format(self.start_index)
+        str += "\tcapacity:{}".format(self.capacity)
+        return str
