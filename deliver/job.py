@@ -9,3 +9,11 @@ class Job:
         self.location_index = location_index
         self.delivery = delivery
         self.service = service
+
+    def __str__(self):
+        str = "[Job] :"
+        str += "\tid:{}".format(self.job_id)
+        str += "\tlocation_index:{}".format(self.location_index)
+        str += "\tdelivery:{}".format(self.delivery)
+        str += "\tservice:{}".format(self.service)
+        return str
