@@ -3,25 +3,26 @@
 from __future__ import print_function
 
 import os
+import subprocess
 import sys
 import time
-import subprocess
+
+from paver.easy import options, task, needs, consume_args
+from paver.setuputils import install_distutils_tasks
 
 # Import parameters from the setup file.
 sys.path.append('.')
 from setup import (
     setup_dict, get_project_files, print_success_message,
     print_failure_message, _lint, _test, _test_all,
-    CODE_DIRECTORY, DOCS_DIRECTORY, TESTS_DIRECTORY, PYTEST_FLAGS)
-
-from paver.easy import options, task, needs, consume_args
-from paver.setuputils import install_distutils_tasks
+    CODE_DIRECTORY, DOCS_DIRECTORY, TESTS_DIRECTORY, PYTEST_FLAGS)  # noqa: E402
 
 options(setup=setup_dict)
 
 install_distutils_tasks()
 
-## Miscellaneous helper functions
+
+# Miscellaneous helper functions
 
 
 def print_passed():
@@ -46,6 +47,7 @@ class cwd(object):
     """Class used for temporarily changing directories. Can be though of
     as a `pushd /my/dir' then a `popd' at the end.
     """
+
     def __init__(self, newcwd):
         """:param newcwd: directory to make the cwd
         :type newcwd: :class:`str`
@@ -62,7 +64,7 @@ class cwd(object):
         os.chdir(self.oldcwd)
 
 
-## Task-related functions
+# Task-related functions
 
 def _doc_make(*make_args):
     """Run make in sphinx' docs directory.
@@ -84,7 +86,7 @@ def _doc_make(*make_args):
     return retcode
 
 
-## Tasks
+# Tasks
 
 @task
 @needs('doc_html', 'setuptools.command.sdist')
@@ -235,7 +237,7 @@ def doc_open():
 def get_tasks():
     """Get all paver-defined tasks."""
     from paver.tasks import environment
-    for task in environment.get_tasks():
+    for task in environment.get_tasks():  # noqa: F402
         print(task.shortname)
 
 
