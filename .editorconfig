@@ -7,15 +7,15 @@ root = true
 
 # defaults
 [*]
-insert_final_newline = true     
+insert_final_newline = true
 
 # 4 space indentation
-[*.{ini,py,py.tpl,rst}]
+[*.{ini, py, py.tpl, rst}]
 indent_style = space
 indent_size = 4
 
 # 4-width tabbed indentation
-[*.{sh,bat.tpl,Makefile.tpl}]
+[*.{sh, bat.tpl, Makefile.tpl}]
 indent_style = tab
 indent_size = 4
 
