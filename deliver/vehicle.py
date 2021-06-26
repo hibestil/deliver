@@ -3,7 +3,7 @@ class Vehicle:
     start_index = None  # Index of the vehicle’s starting location
     capacity = 0  # Initial carboy capacity of the vehicle
 
-    def __init__(self, vehicle_id, start_index, capacity):
-        self.vehicle_id = vehicle_id
+    def __init__(self, id, start_index, capacity):
+        self.vehicle_id = id
         self.start_index = start_index
         self.capacity = capacity
