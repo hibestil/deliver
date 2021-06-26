@@ -4,8 +4,8 @@ class Job:
     delivery = None  # The amount of carboy that will be delivered in this job
     service = None  # Service duration, in seconds
 
-    def __init__(self, job_id, location_index, delivery, service):
-        self.job_id = job_id
+    def __init__(self, id, location_index, delivery, service):
+        self.job_id = id
         self.location_index = location_index
         self.delivery = delivery
         self.service = service
