@@ -7,6 +7,7 @@ from __future__ import print_function
 import sys
 
 from deliver.dataset_helper import DatasetHelper
+from deliver.solve import Solve
 
 
 def main(argv):
@@ -16,6 +17,7 @@ def main(argv):
     [print(v) for v in vehicles]
     [print(j) for j in jobs]
     print(matrix)
+    solver = Solve(matrix, jobs, vehicles)
     return 0
 
 
