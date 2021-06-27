@@ -1,8 +1,9 @@
+import numpy as np
 class Matrix:
-    data = []
+    data = None
 
     def __init__(self, data):
-        self.data = data
+        self.data = np.array(data)
 
     def __str__(self):
         ret = "[Matrix]\n"
