@@ -6,6 +6,7 @@ from __future__ import print_function
 
 import sys
 
+from deliver.genetic_solver import GeneticSolver
 from deliver.problem_helper import ProblemHelper
 from deliver.solve import Solve
 
@@ -13,11 +14,8 @@ from deliver.solve import Solve
 def main(argv):
     json_path = sys.argv[1]
     problem = ProblemHelper(json_path)
-    vehicles, jobs, matrix = problem.get()
-    [print(v) for v in vehicles]
-    [print(j) for j in jobs]
-    print(matrix)
-    model = Solve(matrix, jobs, vehicles)
+    model = GeneticSolver(problem)
+    model.solve()
     return 0
 
 
