@@ -6,14 +6,13 @@ class GeneticSolver(ProblemSolver):
 
     def __init__(self, problem):
         super().__init__(problem)
-        self.groups = [[] for i in range(len(self.problem.depots))]
-
-    def solve(self):
         self.group_customers()
 
+    def solve(self):
         return
 
     def group_customers(self):
+        self.groups = [[] for i in range(len(self.problem.depots))]
         # Group customers to closest depot
         for c in self.problem.customers:
             depot, depot_index, dist = self.find_closest_depot(c)
