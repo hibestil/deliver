@@ -1,9 +1,14 @@
+import numpy as np
+
+from deliver.depot import Depot
+
+
 class ProblemSolver:
     problem = None
-    vehicles = None
-    jobs = None
-    matrix = None
+    customers = []
 
     def __init__(self, problem):
         self.problem = problem
-        self.vehicles, self.jobs, self.matrix = problem.get()
+
+
+

@@ -10,6 +10,8 @@ class ProblemHelper:
 
     def __init__(self, json_path):
         self.data = self.read_json(json_path)
+        self.vehicles, self.jobs, \
+        self.matrix, self.depots, self.customers = self.get()
 
     @staticmethod
     def read_json(file_path):
@@ -26,6 +28,16 @@ class ProblemHelper:
             vehicles = [Vehicle(**v) for v in self.data["vehicles"]]
             jobs = [Job(**j) for j in self.data["jobs"]]
             matrix = Matrix(self.data["matrix"])
+            depots = self.define_depots(vehicles)
+            customers = self.define_customers(jobs)
         else:
             raise Exception("Json file is not provided")
-        return vehicles, jobs, matrix
+        return vehicles, jobs, matrix, depots, customers
+
+    def define_depots(self, vehicles):
+        depot_idxs = [d.start_index for d in vehicles]
+        return list(set(depot_idxs))
+
+    def define_customers(self, jobs):
+        customer_idxs = [j.location_index for j in jobs]
+        return list(set(customer_idxs))
