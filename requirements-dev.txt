@@ -1,0 +1,53 @@
+# Runtime requirements
+--requirement requirements.txt
+
+# Testing
+pytest==6.2.4
+py==1.8.2
+mock==1.0.1
+
+# Linting
+flake8==2.1.0
+mccabe==0.2.1
+pep8==1.7.1
+pyflakes==2.3.1
+
+# Documentation
+Sphinx==1.2
+docutils==0.11
+Jinja2==2.7.1
+MarkupSafe
+Pygments==1.6
+
+# Miscellaneous
+Paver==1.2.1
+colorama==0.2.7
+
+
+atomicwrites==1.4.0
+attrs==21.2.0
+certifi==2021.5.30
+colorama==0.2.7
+coverage==5.5
+docutils==0.11
+flake8==2.1.0
+iniconfig==1.1.1
+Jinja2==2.7.1
+jsonpickle==2.0.0
+MarkupSafe==2.0.1
+mccabe==0.2.1
+mock==1.0.1
+numpy==1.21.0
+packaging==20.9
+Paver==1.2.1
+pep8==1.7.1
+pluggy==0.13.1
+py==1.8.2
+pyflakes==2.3.1
+Pygments==1.6
+pyparsing==2.4.7
+pytest==6.2.4
+pytest-cov==2.12.1
+Sphinx==1.2
+toml==0.10.2
+wincertstore==0.2
