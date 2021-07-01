@@ -9,7 +9,17 @@ class GeneticSolver(ProblemSolver):
         self.groups = [[] for i in range(len(self.problem.depots))]
 
     def solve(self):
+        self.group_customers()
+
         return
+
+    def group_customers(self):
+        # Group customers to closest depot
+        for c in self.problem.customers:
+            depot, depot_index, dist = self.find_closest_depot(c)
+            self.groups[depot_index].append(c)
+        print(self.groups)
+
     def find_closest_depot(self, customer_id):
         closest_depot = None
         closest_distance = -1
