@@ -5,7 +5,7 @@ from deliver.matrix import Matrix
 from deliver.vehicle import Vehicle
 
 
-class DatasetHelper:
+class ProblemHelper:
     data = None
 
     def __init__(self, json_path):
@@ -21,7 +21,7 @@ class DatasetHelper:
         f = open(file_path, )
         return json.load(f)
 
-    def process_data(self):
+    def get(self):
         if self.data:
             vehicles = [Vehicle(**v) for v in self.data["vehicles"]]
             jobs = [Job(**j) for j in self.data["jobs"]]

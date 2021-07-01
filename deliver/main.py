@@ -6,18 +6,18 @@ from __future__ import print_function
 
 import sys
 
-from deliver.dataset_helper import DatasetHelper
+from deliver.problem_helper import ProblemHelper
 from deliver.solve import Solve
 
 
 def main(argv):
     json_path = sys.argv[1]
-    dataset_helper = DatasetHelper(json_path)
-    vehicles, jobs, matrix = dataset_helper.process_data()
+    problem = ProblemHelper(json_path)
+    vehicles, jobs, matrix = problem.get()
     [print(v) for v in vehicles]
     [print(j) for j in jobs]
     print(matrix)
-    solver = Solve(matrix, jobs, vehicles)
+    model = Solve(matrix, jobs, vehicles)
     return 0
 
 
