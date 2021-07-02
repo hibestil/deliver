@@ -18,7 +18,7 @@ class GeneticSolver(ProblemSolver):
         self.population_size = population_size
         self.random_portion = random_portion
         self.group_customers()
-        self.init_population()
+        self.init_chromosomes()
 
     def solve(self):
         return
@@ -44,9 +44,13 @@ class GeneticSolver(ProblemSolver):
 
         return closest_depot[0], closest_depot[1], closest_distance
 
-    def init_population(self):
-        for z in range(int(self.population_size * (1 - self.random_portion))):
+    def init_chromosomes(self):
+        for x in range(int(self.population_size * (1 - self.random_portion))):
             chromosome = self.create_heuristic_chromosome(self.groups)
+            self.population.append((chromosome, self.evaluate(chromosome)))
+
+        for x in range(int(self.population_size * self.random_portion)):
+            chromosome = self.create_random_chromosome(self.groups)
             self.population.append((chromosome, self.evaluate(chromosome)))
 
     def distance(self, source, destination):
@@ -199,6 +203,28 @@ class GeneticSolver(ProblemSolver):
         chromosome = self.encode(routes)
         chromosome.extend(missing_customers)
         return chromosome
+
+    def create_random_chromosome(self, groups):
+        routes = []
+        for d in range(len(groups)):
+            depot = depots[d]
+            group = groups[d][:]
+            random.shuffle(group)
+            routes.append([[]])
+
+            r = 0
+            route_cost = 0
+            route_load = 0
+            last_pos = depot
+            for c in group:
+                customer = self.problem.customers[c - 1]
+                cost = self.distance(last_pos, customer) + customer.service_duration + find_closest_depot(customer)[2]
+                if route_cost + cost > depot.max_duration or route_load + customer.demand > depot.max_load:
+                    r += 1
+                    routes[d].append([])
+                routes[d][r].append(c)
+
+        return self.encode(routes)
 
     def evaluate(self, chromosome, return_distance=False):
         for c in self.problem.customers:
