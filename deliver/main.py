@@ -8,13 +8,25 @@ import sys
 
 from deliver.genetic_solver import GeneticSolver
 from deliver.problem_helper import ProblemHelper
-from deliver.solve import Solve
 
 
 def main(argv):
+    generations = 2500
+    population_size = 50
+    crossover_rate = 0.05
+    heuristic_mutate_rate = 0.05
+    inversion_mutate_rate = 0.05
+    depot_move_mutate_rate = 0
+    best_insertion_mutate_rate = 0.1
+    route_merge_rate = 0.05
+
     json_path = sys.argv[1]
     problem = ProblemHelper(json_path)
     model = GeneticSolver(problem)
+    solution = model.solve(generations, crossover_rate, heuristic_mutate_rate, inversion_mutate_rate,
+                           depot_move_mutate_rate, best_insertion_mutate_rate, route_merge_rate)
+
+    model.show(solution)
     return 0
 
 

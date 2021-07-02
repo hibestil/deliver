@@ -114,7 +114,7 @@ class GeneticSolver(ProblemSolver):
 
         return self.problem.matrix.data[s_id][d_id]
 
-    def show(self, chromosome, path):
+    def show(self, chromosome):
         routes = self.decode(chromosome)
         total_duration = self.evaluate(chromosome, True)
 
