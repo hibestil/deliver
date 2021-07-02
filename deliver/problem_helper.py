@@ -1,5 +1,7 @@
 import json
+from cmath import inf
 
+from deliver.depot import Depot
 from deliver.job import Job
 from deliver.matrix import Matrix
 from deliver.vehicle import Vehicle
@@ -34,9 +36,11 @@ class ProblemHelper:
             raise Exception("Json file is not provided")
         return vehicles, jobs, matrix, depots, customers
 
-    def define_depots(self, vehicles):
+    @staticmethod
+    def define_depots(vehicles):
         depot_idxs = [d.start_index for d in vehicles]
-        return list(set(depot_idxs))
+        # n_vehicles_in_depot = Counter(depot_idxs)
+        return [Depot(d, inf, inf, inf) for d in list(set(depot_idxs))]
 
     def define_customers(self, jobs):
         customer_idxs = [j.location_index for j in jobs]
