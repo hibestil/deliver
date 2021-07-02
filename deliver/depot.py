@@ -6,3 +6,10 @@ class Depot:
         self.max_duration = max_duration
         self.max_load = max_load
         self.closest_customers = []
+
+    def __str__(self):
+        return str([self.id,
+                    self.max_vehicles,
+                    self.max_duration,
+                    self.max_load,
+                    self.closest_customers])
