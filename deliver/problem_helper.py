@@ -1,6 +1,7 @@
 import json
 from cmath import inf
 
+from deliver.customer import Customer
 from deliver.depot import Depot
 from deliver.job import Job
 from deliver.matrix import Matrix
@@ -42,6 +43,6 @@ class ProblemHelper:
         # n_vehicles_in_depot = Counter(depot_idxs)
         return [Depot(d, inf, inf, inf) for d in list(set(depot_idxs))]
 
-    def define_customers(self, jobs):
-        customer_idxs = [j.location_index for j in jobs]
-        return list(set(customer_idxs))
+    @staticmethod
+    def define_customers(jobs):
+        return [Customer(index, j.service, j.delivery[0]) for index, j in enumerate(jobs)]
