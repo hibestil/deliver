@@ -1,11 +1,22 @@
+import math
+
+import numpy as np
+
 from deliver.problem_solver import ProblemSolver
+import random
 
 
 class GeneticSolver(ProblemSolver):
     groups = None
+    population = []
+    population_size = 25
+    random_portion = 0
 
-    def __init__(self, problem):
+    def __init__(self, problem, population_size=25, random_portion=0):
         super().__init__(problem)
+
+        self.population_size = population_size
+        self.random_portion = random_portion
         self.group_customers()
 
     def solve(self):
