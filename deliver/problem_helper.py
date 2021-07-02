@@ -45,4 +45,4 @@ class ProblemHelper:
 
     @staticmethod
     def define_customers(jobs):
-        return [Customer(index, j.service, j.delivery[0]) for index, j in enumerate(jobs)]
+        return [Customer(index, j.service, j.delivery[0], j.location_index) for index, j in enumerate(jobs)]
