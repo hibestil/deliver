@@ -15,7 +15,6 @@ def main(argv):
     json_path = sys.argv[1]
     problem = ProblemHelper(json_path)
     model = GeneticSolver(problem)
-    model.solve()
     return 0
 
 
