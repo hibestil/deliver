@@ -165,13 +165,13 @@ class GeneticSolver(ProblemSolver):
         print("----------------------------------------------------")
         print("Vehicle :", self.problem.depots[d].id)
         print("\t|_ Leaves from depot", self.problem.depots[d].id)
-        print("\t|_ Carried load of this vehicle is : ", route_load)
-        print("\t|_ and goes to these customers respectively : ")
+        print("\t|_ Amount of carried load by this vehicle is : ", route_load)
+        print("\t|_ Goes to these customers respectively : ")
         for c in route:
             print("\t\t|_ customer: {}\tdemand:{}".format(
                 customers[c].location_index,
                 customers[c].demand))
-        print("\t|_ Vehicle returns depot", end_depot)
+        print("\t|_ Vehicle returns to the depot", end_depot)
         print("\t|_ Total duration of this trip is ", route_length)
 
     def create_output_json(self, chromosome):

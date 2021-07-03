@@ -42,32 +42,33 @@ Deliver produces a json file shown in ``data\output.json``. And the expected con
         ----------------------------------------------------
         Vehicle : 0
             |_ Leaves from depot 0
-            |_ Carried load of this vehicle is :  1
-            |_ and goes to these customers respectively :
-                |_ customer: 9	demand:1
-            |_ Vehicle returns depot 0
-            |_ Total duration of this trip is  1209
-        ----------------------------------------------------
-        Vehicle : 0
-            |_ Leaves from depot 0
-            |_ Carried load of this vehicle is :  4
-            |_ and goes to these customers respectively :
+            |_ Amount of carried load by this vehicle is :  4
+            |_ Goes to these customers respectively :
                 |_ customer: 4	demand:1
                 |_ customer: 7	demand:1
                 |_ customer: 8	demand:1
                 |_ customer: 5	demand:1
-            |_ Vehicle returns depot 0
+            |_ Vehicle returns to the depot 0
             |_ Total duration of this trip is  3757
+        ----------------------------------------------------
+        Vehicle : 0
+            |_ Leaves from depot 0
+            |_ Amount of carried load by this vehicle is :  1
+            |_ Goes to these customers respectively :
+                |_ customer: 9	demand:1
+            |_ Vehicle returns to the depot 0
+            |_ Total duration of this trip is  1209
         ----------------------------------------------------
         Vehicle : 2
             |_ Leaves from depot 2
-            |_ Carried load of this vehicle is :  2
-            |_ and goes to these customers respectively :
+            |_ Amount of carried load by this vehicle is :  2
+            |_ Goes to these customers respectively :
                 |_ customer: 6	demand:2
-            |_ Vehicle returns depot 2
+            |_ Vehicle returns to the depot 2
             |_ Total duration of this trip is  462
 
         Process finished with exit code 0
+
 
 ``
 Installation
