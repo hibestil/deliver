@@ -3,67 +3,92 @@ import random
 
 import numpy as np
 
-from deliver.problem.customer import Customer
 from deliver.genetic_algorithm.problem_solver import ProblemSolver
+from deliver.problem.customer import Customer
 
 
 class GeneticSolver(ProblemSolver):
     groups = None
     population = []
-    population_size = 25
-    random_portion = 0
 
-    def __init__(self, problem, population_size=50, random_portion=0):
+    def __init__(self, problem,
+                 random_portion=0,
+                 generations=2500,
+                 population_size=50,
+                 crossover_rate=0.05,
+                 heuristic_mutate_rate=0.05,
+                 inversion_mutate_rate=0.05,
+                 depot_move_mutate_rate=0,
+                 best_insertion_mutate_rate=0.1,
+                 route_merge_rate=0.05,
+                 ):
         super().__init__(problem)
-
+        # Genetic Algorithm Parameters
         self.population_size = population_size
         self.random_portion = random_portion
+        self.generations = generations
+        self.crossover_rate = crossover_rate
+        self.heuristic_mutate_rate = heuristic_mutate_rate
+        self.inversion_mutate_rate = inversion_mutate_rate
+        self.depot_move_mutate_rate = depot_move_mutate_rate
+        self.best_insertion_mutate_rate = best_insertion_mutate_rate
+        self.route_merge_rate = route_merge_rate
+        # Initialize variables
         self.group_customers()
         self.initialize_population()
 
-    def solve(self, generations, crossover_rate, heuristic_mutate_rate, inversion_mutate_rate,
-              depot_move_mutate_rate, best_insertion_mutate_rate, route_merge_rate,
-              log=True,intermediate_shows=True):
+    def solve(self, log=True, intermediate_shows=True):
 
-        for g in range(generations):
+        for g in range(self.generations):
             if log and g % 10 == 0:
                 best = max(self.population, key=lambda x: x[1])
-                print(f'[Generation {g}] Best score: {best[1]} Consistent: {self.is_consistent(best[0])}')
+                print('[Generation {}] Best score: {} Consistent: {}'
+                      .format(g, best[1], self.is_consistent(best[0])))
+
             if intermediate_shows and g % 100 == 0:
                 self.population.sort(key=lambda x: -x[1])
                 self.show(self.population[0][0])
 
-            selection = self.select(heuristic_mutate_rate + inversion_mutate_rate
-                                    + crossover_rate + depot_move_mutate_rate + best_insertion_mutate_rate
-                                    + route_merge_rate)
+            selection = self.select(
+                self.heuristic_mutate_rate + self.inversion_mutate_rate
+                + self.crossover_rate + self.depot_move_mutate_rate
+                + self.best_insertion_mutate_rate
+                + self.route_merge_rate)
             selection = list(map(lambda x: x[0], selection))
 
             offset = 0
-            for i in range(int((self.population_size * crossover_rate) / 2)):
-                p1, p2 = selection[2 * i + offset], selection[2 * i + 1 + offset]
+            for i in range(
+                int((self.population_size * self.crossover_rate) / 2)):
+                p1, p2 = selection[2 * i + offset], selection[
+                    2 * i + 1 + offset]
                 self.crossover(p1, p2)
                 self.crossover(p2, p1)
-            offset += int(self.population_size * crossover_rate)
+            offset += int(self.population_size * self.crossover_rate)
 
-            for i in range(int(self.population_size * heuristic_mutate_rate)):
+            for i in range(
+                int(self.population_size * self.heuristic_mutate_rate)):
                 self.heuristic_mutate(selection[i + offset])
-            offset += int(self.population_size * heuristic_mutate_rate)
+            offset += int(self.population_size * self.heuristic_mutate_rate)
 
-            for i in range(int(self.population_size * inversion_mutate_rate)):
+            for i in range(
+                int(self.population_size * self.inversion_mutate_rate)):
                 self.inversion_mutate(selection[i + offset])
-            offset += int(self.population_size * inversion_mutate_rate)
+            offset += int(self.population_size * self.inversion_mutate_rate)
 
-            for i in range(int(self.population_size * depot_move_mutate_rate)):
+            for i in range(
+                int(self.population_size * self.depot_move_mutate_rate)):
                 self.depot_move_mutate(selection[i + offset])
-            offset += int(self.population_size * depot_move_mutate_rate)
+            offset += int(self.population_size * self.depot_move_mutate_rate)
 
-            for i in range(int(self.population_size * best_insertion_mutate_rate)):
+            for i in range(
+                int(self.population_size * self.best_insertion_mutate_rate)):
                 self.best_insertion_mutate(selection[i + offset])
-            offset += int(self.population_size * best_insertion_mutate_rate)
+            offset += int(
+                self.population_size * self.best_insertion_mutate_rate)
 
-            for i in range(int(self.population_size * route_merge_rate)):
+            for i in range(int(self.population_size * self.route_merge_rate)):
                 self.route_merge(selection[i + offset])
-            offset += int(self.population_size * route_merge_rate)
+            offset += int(self.population_size * self.route_merge_rate)
 
             self.population = self.select(1.0, elitism=4)
 
@@ -100,7 +125,7 @@ class GeneticSolver(ProblemSolver):
         for i, depot in enumerate(self.problem.depots):
             from_c_to_d = self.distance(depot, customer)
             from_d_to_c = self.distance(customer, depot)
-            min_distance = from_c_to_d+ from_d_to_c
+            min_distance = from_c_to_d + from_d_to_c
             if closest_depot is None or min_distance < closest_distance:
                 closest_depot = (depot, i)
                 closest_distance = min_distance
@@ -177,8 +202,9 @@ class GeneticSolver(ProblemSolver):
         new_route.append(prev_cust)
 
         while len(route):
-            prev_cust = min(route, key=lambda x: self.distance(self.problem.customers[x - 1],
-                                                               self.problem.customers[prev_cust - 1]))
+            prev_cust = min(route, key=lambda x: self.distance(
+                self.problem.customers[x - 1],
+                self.problem.customers[prev_cust - 1]))
             route.remove(prev_cust)
             new_route.append(prev_cust)
         return new_route
@@ -206,7 +232,8 @@ class GeneticSolver(ProblemSolver):
         for c in route:
             customer = self.problem.customers[c]
             route_load += customer.demand
-            route_duration += self.distance(last_pos, customer) + customer.service_duration
+            route_duration += self.distance(last_pos, customer) \
+                              + customer.service_duration
             last_pos = customer
         route_duration += self.find_closest_depot(last_pos)[2]
 
@@ -217,7 +244,8 @@ class GeneticSolver(ProblemSolver):
             if depot.max_duration != 0 and route_duration > depot.max_duration:
                 return False, 2
             return True, 0
-        return route_load <= depot.max_load and (depot.max_duration == 0 or route_duration <= depot.max_duration)
+        return route_load <= depot.max_load and (
+            depot.max_duration == 0 or route_duration <= depot.max_duration)
 
     def initialize_population(self):
         for x in range(int(self.population_size * (1 - self.random_portion))):
@@ -269,7 +297,7 @@ class GeneticSolver(ProblemSolver):
                 if ri == -1 and rj == -1:
                     if len(routes[d]) < depot.max_vehicles:
                         if ci == cj:
-                            route =[ci]
+                            route = [ci]
                         else:
                             route = [ci, cj]
                 elif ri != -1 and rj == -1:
@@ -329,7 +357,8 @@ class GeneticSolver(ProblemSolver):
             last_pos = depot
             for c in group:
                 customer = self.problem.customers[c]
-                cost = self.distance(last_pos, customer) + customer.service_duration + \
+                cost = self.distance(last_pos, customer) \
+                       + customer.service_duration + \
                        self.find_closest_depot(customer)[2]
                 if route_cost + cost > depot.max_duration or route_load + customer.demand > depot.max_load:
                     r += 1
@@ -380,7 +409,8 @@ class GeneticSolver(ProblemSolver):
         for depot_index in range(len(routes)):
             depot = self.problem.depots[depot_index]
             for route in routes[depot_index]:
-                route_length, route_load = self.evaluate_route(route, depot, True)
+                route_length, route_load = self.evaluate_route(route, depot,
+                                                               True)
 
                 score += route_length
 
@@ -416,8 +446,11 @@ class GeneticSolver(ProblemSolver):
     def select(self, portion, elitism=0):
         total_fitness = sum(map(lambda x: x[1], self.population))
         weights = list(
-            map(lambda x: (total_fitness - x[1]) / (total_fitness * (self.population_size - 1)), self.population))
-        selection = random.choices(self.population, weights=weights, k=int(self.population_size * portion - elitism))
+            map(lambda x: (total_fitness - x[1]) / (
+                total_fitness * (self.population_size - 1)),
+                self.population))
+        selection = random.choices(self.population, weights=weights, k=int(
+            self.population_size * portion - elitism))
         self.population.sort(key=lambda x: -x[1])
         if elitism > 0:
             selection.extend(self.population[:elitism])
