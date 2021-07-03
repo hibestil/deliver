@@ -97,12 +97,15 @@ class GeneticSolver(ProblemSolver):
 
         best_solution = None
         if self.is_consistent(self.population[0][0]):
-            print(f'Best score: {self.population[0][1]}, best distance: {self.evaluate(self.population[0][0], True)}')
+            print('Best score: {}, best distance: {}'.format(
+                self.population[0][1],
+                self.evaluate(self.population[0][0], True)))
             best_solution = self.population[0][0]
         else:
             for c in self.population:
                 if self.is_consistent(c[0]):
-                    print(f'Best score: {c[1]}, best distance: {self.evaluate(c[0], True)}')
+                    print('Best score: {}, best distance: {}'.format(
+                        c[1], self.evaluate(c[0], True)))
                     best_solution = c[0]
                     break
             else:
@@ -152,19 +155,24 @@ class GeneticSolver(ProblemSolver):
         for d, depot in enumerate(self.problem.depots):
             for r, route in enumerate(routes[d]):
                 if route:
-                    route_length, route_load = self.evaluate_route(route, depot, True)
-                    end_depot = self.find_closest_depot(self.problem.customers[route[-1]])[1]
-                    print("-------------------------------------------------------")
-                    print("Vehicle {} leaves from depot {} ".format(self.problem.depots[d].id, self.problem.depots[d].id))
-                    print("\t|_ Carried load of this vehicle is {} ".format(route_load))
-                    print("\t|_ and goes to these customers respectively : ")
-                    for c in route:
-                        print("\t\t|_ customer: {}\tdemand:{}".format(self.problem.customers[c].location_index,
-                                                                      self.problem.customers[c].demand))
+                    self.print_route_info(self, d, route, depot)
 
-                    print("\t|_ At the end of trip vehicle arrives depot {}".format(end_depot))
-                    print("\t|_ Total duration of this trip is {}".format(route_length))
+    def print_route_info(self, d, route, depot):
+        route_length, route_load = self.evaluate_route(route, depot, True)
+        customers = self.problem.customers
+        end_depot = self.find_closest_depot(customers[route[-1]])[1]
 
+        print("----------------------------------------------------")
+        print("Vehicle {} ".format(self.problem.depots[d].id))
+        print("\t|_ Leaves from depot {} ", self.problem.depots[d].id)
+        print("\t|_ Carried load of this vehicle is {} ".format(route_load))
+        print("\t|_ and goes to these customers respectively : ")
+        for c in route:
+            print("\t\t|_ customer: {}\tdemand:{}".format(
+                customers[c].location_index,
+                customers[c].demand))
+        print("\t|_ Vehicle returns depot {}".format(end_depot))
+        print("\t|_ Total duration of this trip is {}".format(route_length))
 
     def encode(self, routes):
         chromosome = []
