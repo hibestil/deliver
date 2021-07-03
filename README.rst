@@ -1,7 +1,76 @@
 =========================
 Deliver
 =========================
+A genetic algorithm implementation for the Multi Depot Vehicle Routing Problem.
 
+Details
+------
+There are n vehicles roaming around the city and m orders waiting for the delivery.
+Vehicles have a limited :
+
+- amount of stock
+- and predefined service durations.
+
+Usage
+-----
+This application accepts input with following formats :
+
+1. JSON (Vehicle, Job, Matrix) Format
+    - Json file path can be passed as program argument.
+    - Example json file : ``data/input.json``
+2. `Cordeau’s Instances <https://github.com/fboliveira/MDVRP-Instances/blob/master/DESCRIPTION.mdL>`_
+    - Benchmark parameter needs to be to set. (ie. ``problem = ProblemHelper(path, benchmark=True)``)
+Output
+-------
+Deliver produces a json file shown in ``data\output.json``. And the expected console output is shown below:
+
+.. example-output::
+        [Generation 0] Best score: 0.00013974287311347122 Consistent: True
+        [Generation 10] Best score: 0.00018422991893883567 Consistent: True
+        .
+        .
+        .
+        [Generation 2470] Best score: 0.00018422991893883567 Consistent: True
+        [Generation 2480] Best score: 0.00018422991893883567 Consistent: True
+        [Generation 2490] Best score: 0.00018422991893883567 Consistent: True
+
+
+        Finished training
+        Best score: 0.00018422991893883567, best distance: 5428
+        -----------------------SUMMARY-----------------------
+        Total duration : 5428
+        ----------------------------------------------------
+        Vehicle : 0
+            |_ Leaves from depot 0
+            |_ Amount of carried load by this vehicle is :  4
+            |_ Goes to these customers respectively :
+                |_ customer: 4	demand:1
+                |_ customer: 7	demand:1
+                |_ customer: 8	demand:1
+                |_ customer: 5	demand:1
+            |_ Vehicle returns to the depot 0
+            |_ Total duration of this trip is  3757
+        ----------------------------------------------------
+        Vehicle : 0
+            |_ Leaves from depot 0
+            |_ Amount of carried load by this vehicle is :  1
+            |_ Goes to these customers respectively :
+                |_ customer: 9	demand:1
+            |_ Vehicle returns to the depot 0
+            |_ Total duration of this trip is  1209
+        ----------------------------------------------------
+        Vehicle : 2
+            |_ Leaves from depot 2
+            |_ Amount of carried load by this vehicle is :  2
+            |_ Goes to these customers respectively :
+                |_ customer: 6	demand:2
+            |_ Vehicle returns to the depot 2
+            |_ Total duration of this trip is  462
+
+        Process finished with exit code 0
+
+
+``
 Installation
 ------------
 #. Install the project's development and runtime requirements::
@@ -11,31 +80,6 @@ Installation
 #. Run the tests::
 
         paver test_all
-
-Using Paver
------------
-
-The ``pavement.py`` file comes with a number of tasks already set up for you. You can see a full list by typing ``paver help`` in the project root directory. The following are included::
-
-    Tasks from pavement:
-    lint             - Perform PEP8 style check, run PyFlakes, and run McCabe complexity metrics on the code.
-    doc_open         - Build the HTML docs and open them in a web browser.
-    coverage         - Run tests and show test coverage report.
-    doc_watch        - Watch for changes in the Sphinx documentation and rebuild when changed.
-    test             - Run the unit tests.
-    get_tasks        - Get all paver-defined tasks.
-    commit           - Commit only if all the tests pass.
-    test_all         - Perform a style check and run all unit tests.
-
-For example, to run the both the unit tests and lint, run the following in the project root directory::
-
-    paver test_all
-
-To build the HTML documentation, then open it in a web browser::
-
-    paver doc_open
-
-
 
 Authors
 =======
