@@ -15,7 +15,7 @@ def main(argv):
     json_path = sys.argv[1]
     problem = ProblemHelper(json_path)
     # Create Genetic Algorithm solver object
-    model = GeneticSolver(problem, population_size=population_size)
+    model = GeneticSolver(problem)
     # Solve the problem
     solution = model.solve()
     # Print out the solution
