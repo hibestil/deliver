@@ -22,7 +22,7 @@ def main(argv):
 
     json_path = sys.argv[1]
     problem = ProblemHelper(json_path)
-    model = GeneticSolver(problem)
+    model = GeneticSolver(problem,population_size=population_size)
     solution = model.solve(generations, crossover_rate, heuristic_mutate_rate, inversion_mutate_rate,
                            depot_move_mutate_rate, best_insertion_mutate_rate, route_merge_rate)
 
