@@ -23,12 +23,15 @@ class GeneticSolver(ProblemSolver):
 
     def solve(self, generations, crossover_rate, heuristic_mutate_rate, inversion_mutate_rate,
               depot_move_mutate_rate, best_insertion_mutate_rate, route_merge_rate,
-              log=True):
+              log=True,intermediate_shows=True):
 
         for g in range(generations):
             if log and g % 10 == 0:
                 best = max(self.population, key=lambda x: x[1])
                 print(f'[Generation {g}] Best score: {best[1]} Consistent: {self.is_consistent(best[0])}')
+            if intermediate_shows and g % 100 == 0:
+                self.population.sort(key=lambda x: -x[1])
+                self.show(self.population[0][0])
 
             selection = self.select(heuristic_mutate_rate + inversion_mutate_rate
                                     + crossover_rate + depot_move_mutate_rate + best_insertion_mutate_rate
