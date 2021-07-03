@@ -6,8 +6,8 @@ from __future__ import print_function
 
 import sys
 
-from deliver.genetic_solver import GeneticSolver
-from deliver.problem_helper import ProblemHelper
+from deliver.genetic_algorithm.genetic_solver import GeneticSolver
+from deliver.problem.problem_helper import ProblemHelper
 
 
 def main(argv):

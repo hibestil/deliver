@@ -3,8 +3,8 @@ import random
 
 import numpy as np
 
-from deliver.customer import Customer
-from deliver.problem_solver import ProblemSolver
+from deliver.problem.customer import Customer
+from deliver.genetic_algorithm.problem_solver import ProblemSolver
 
 
 class GeneticSolver(ProblemSolver):

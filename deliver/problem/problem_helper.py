@@ -1,11 +1,11 @@
 import json
 from cmath import inf
 
-from deliver.customer import Customer
-from deliver.depot import Depot
-from deliver.job import Job
-from deliver.matrix import Matrix
-from deliver.vehicle import Vehicle
+from deliver.problem.customer import Customer
+from deliver.problem.depot import Depot
+from deliver.problem.job import Job
+from deliver.problem.matrix import Matrix
+from deliver.problem.vehicle import Vehicle
 
 
 class ProblemHelper:

@@ -1,8 +1,3 @@
-import numpy as np
-
-from deliver.depot import Depot
-
-
 class ProblemSolver:
     problem = None
     customers = []
