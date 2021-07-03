@@ -18,6 +18,7 @@ def main(argv):
     model = GeneticSolver(problem)
     # Solve the problem
     solution = model.solve()
+    solution = model.solve(intermediate_prints=False)
     # Print out the solution
     model.show(solution)
     return 0
