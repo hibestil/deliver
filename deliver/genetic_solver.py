@@ -128,7 +128,7 @@ class GeneticSolver(ProblemSolver):
             for r, route in enumerate(routes[d]):
                 if route:
                     route_length, route_load = self.evaluate_route(route, depot, True)
-                    end_depot = self.find_closest_depot(self.problem.customers[route[-1] - 1])[1]
+                    end_depot = self.find_closest_depot(self.problem.customers[route[-1]])[1]
                     print("-------------------------------------------------------")
                     print("Vehicle {} leaves from depot {} ".format(self.problem.depots[d].id, self.problem.depots[d].id))
                     print("\t|_ Carried load of this vehicle is {} ".format(route_load))
@@ -204,7 +204,7 @@ class GeneticSolver(ProblemSolver):
         route_duration = 0
         last_pos = depot
         for c in route:
-            customer = self.problem.customers[c - 1]
+            customer = self.problem.customers[c]
             route_load += customer.demand
             route_duration += self.distance(last_pos, customer) + customer.service_duration
             last_pos = customer
@@ -238,13 +238,13 @@ class GeneticSolver(ProblemSolver):
             depot = depots[d]
             savings = []
             for i in range(len(groups[d])):
-                ci = customers[groups[d][i] - 1]
+                ci = customers[groups[d][i]]
                 savings.append([])
                 for j in range(len(groups[d])):
                     if j <= i:
                         savings[i].append(0)
                     else:
-                        cj = customers[groups[d][j] - 1]
+                        cj = customers[groups[d][j]]
                         savings[i].append(self.distance(depot, ci) + self.distance(depot, cj) -
                                           self.distance(ci, cj))
             savings = np.array(savings)
@@ -268,7 +268,10 @@ class GeneticSolver(ProblemSolver):
                 route = None
                 if ri == -1 and rj == -1:
                     if len(routes[d]) < depot.max_vehicles:
-                        route = [ci, cj]
+                        if ci == cj:
+                            route =[ci]
+                        else:
+                            route = [ci, cj]
                 elif ri != -1 and rj == -1:
                     if routes[d][ri].index(ci) in (0, len(routes[d][ri]) - 1):
                         route = routes[d][ri] + [cj]
@@ -325,7 +328,7 @@ class GeneticSolver(ProblemSolver):
             route_load = 0
             last_pos = depot
             for c in group:
-                customer = self.problem.customers[c - 1]
+                customer = self.problem.customers[c]
                 cost = self.distance(last_pos, customer) + customer.service_duration + \
                        self.find_closest_depot(customer)[2]
                 if route_cost + cost > depot.max_duration or route_load + customer.demand > depot.max_load:
@@ -399,7 +402,7 @@ class GeneticSolver(ProblemSolver):
         customer = None
         last_pos = depot
         for cid in route:
-            customer = self.problem.customers[cid - 1]
+            customer = self.problem.customers[cid]
             route_load += customer.demand
             route_length += self.distance(last_pos, customer)
             route_length += customer.service_duration
