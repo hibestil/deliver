@@ -97,7 +97,7 @@ class GeneticSolver(ProblemSolver):
         for i, depot in enumerate(self.problem.depots):
             from_c_to_d = self.distance(depot, customer)
             from_d_to_c = self.distance(customer, depot)
-            min_distance = min(from_c_to_d, from_d_to_c)
+            min_distance = from_c_to_d+ from_d_to_c
             if closest_depot is None or min_distance < closest_distance:
                 closest_depot = (depot, i)
                 closest_distance = min_distance
