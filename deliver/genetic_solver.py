@@ -13,13 +13,13 @@ class GeneticSolver(ProblemSolver):
     population_size = 25
     random_portion = 0
 
-    def __init__(self, problem, population_size=50, random_portion=7):
+    def __init__(self, problem, population_size=50, random_portion=0):
         super().__init__(problem)
 
         self.population_size = population_size
         self.random_portion = random_portion
         self.group_customers()
-        self.init_chromosomes()
+        self.initialize_population()
 
     def solve(self, generations, crossover_rate, heuristic_mutate_rate, inversion_mutate_rate,
               depot_move_mutate_rate, best_insertion_mutate_rate, route_merge_rate,
@@ -127,7 +127,7 @@ class GeneticSolver(ProblemSolver):
                     route_length, route_load = self.evaluate_route(route, depot, True)
                     end_depot = self.find_closest_depot(self.problem.customers[route[-1] - 1])[1]
                     print("-------------------------------------------------------")
-                    print("Vehicle {} leaves from depot {} ".format(self.problem.vehicles[r].vehicle_id, self.problem.depots[d].id))
+                    print("Vehicle {} leaves from depot {} ".format(self.problem.depots[d].id, self.problem.depots[d].id))
                     print("\t|_ Carried load of this vehicle is {} ".format(route_load))
                     print("\t|_ and goes to these customers respectively : ")
                     for c in route:
@@ -196,7 +196,7 @@ class GeneticSolver(ProblemSolver):
 
         return True
 
-    def is_consistent_route(self, route, depot, include_reason=False):
+    def is_consistent_route(self, route, depot, include_reason=True):
         route_load = 0
         route_duration = 0
         last_pos = depot
@@ -208,6 +208,7 @@ class GeneticSolver(ProblemSolver):
         route_duration += self.find_closest_depot(last_pos)[2]
 
         if include_reason:
+
             if route_load > depot.max_load:
                 return False, 1
             if depot.max_duration != 0 and route_duration > depot.max_duration:
@@ -215,7 +216,7 @@ class GeneticSolver(ProblemSolver):
             return True, 0
         return route_load <= depot.max_load and (depot.max_duration == 0 or route_duration <= depot.max_duration)
 
-    def init_chromosomes(self):
+    def initialize_population(self):
         for x in range(int(self.population_size * (1 - self.random_portion))):
             chromosome = self.create_heuristic_chromosome(self.groups)
             self.population.append((chromosome, self.evaluate(chromosome)))
