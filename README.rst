@@ -14,20 +14,26 @@ Vehicles have a limited :
 - amount of stock
 - and predefined service durations.
 
+In this project has been developed with inspiration from the method written by Ombuki-Berman et al.
+
+        Ombuki-Berman, Beatrice, and Franklin T. Hanshar. "Using genetic algorithms for multi-depot vehicle routing." Bio-inspired algorithms for the vehicle routing problem. Springer, Berlin, Heidelberg, 2009. 77-99.
 Usage
 -----
-This application accepts input with following formats :
+Create a new enviroment and install required packages:
+::
+        pip install -r requirements.txt
+Run script with this command:
+::
+        python main.py -i ../data/input.json --intermediate_prints -o ../data/output.json
 
-1. JSON (Vehicle, Job, Matrix) Format
-    - Json file path can be passed as program argument.
-    - Example json file : ``data/input.json``
-2. `Cordeau’s Instances <https://github.com/fboliveira/MDVRP-Instances/blob/master/DESCRIPTION.mdL>`_
-    - Benchmark parameter needs to be to set. (ie. ``problem = ProblemHelper(path, benchmark=True)``)
+To use `Cordeau’s Instances <https://github.com/fboliveira/MDVRP-Instances/blob/master/DESCRIPTION.mdL>`_ please use related input data and set ``--benchmark_input`` option.
+::
+        python main.py -i ../data/p01 --intermediate_prints --benchmark_input -o ../data/output.json
+
 Output
 -------
 Deliver produces a json file shown in ``data\output.json``. And the expected console output is shown below:
-
-.. example-output::
+::
         [Generation 0] Best score: 0.00013974287311347122 Consistent: True
         [Generation 10] Best score: 0.00018422991893883567 Consistent: True
         .
@@ -54,8 +60,8 @@ Deliver produces a json file shown in ``data\output.json``. And the expected con
             |_ Vehicle returns to the depot 0
             |_ Total duration of this trip is  3757
         ----------------------------------------------------
-        Vehicle : 0
-            |_ Leaves from depot 0
+        Vehicle : 1
+            |_ Leaves from depot 1
             |_ Amount of carried load by this vehicle is :  1
             |_ Goes to these customers respectively :
                 |_ customer: 9	demand:1
@@ -74,7 +80,8 @@ Deliver produces a json file shown in ``data\output.json``. And the expected con
 
 
 ``
-Installation
+
+Installation for Development
 ------------
 #. Install the project's development and runtime requirements::
 
