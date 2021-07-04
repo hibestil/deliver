@@ -1,3 +1,6 @@
+.. image:: data/diagram.png
+  :alt: Deliver MDVRP Genetic Algorithm System Diagram
+
 =========================
 Deliver
 =========================
