@@ -4,6 +4,7 @@
 
 from __future__ import print_function
 
+import argparse
 import json
 import sys
 
@@ -12,19 +13,28 @@ from deliver.problem.problem_helper import ProblemHelper
 
 
 def main(argv):
+    parser = argparse.ArgumentParser(description='Deliver MDVRP | Genetic algoritms for solving MDVRP problems')
+    parser.add_argument("-i", dest="input_filename", required=True,
+                        help="input file with json format.", metavar="FILE",
+                        type=str)
+    parser.add_argument('--benchmark_input', dest="benchmark_input_type", default=False, action='store_true')
+    parser.add_argument('--intermediate_prints', dest="intermediate_prints", default=False, action='store_true')
+    parser.add_argument("-o", dest="output_filename", required=True,
+                        help="output file path.", metavar="FILE", type=str)
+    args = parser.parse_args()
+
     # Read problem JSON from argv
-    json_path = sys.argv[1]
-    problem = ProblemHelper(json_path)
+    problem = ProblemHelper(args.input_filename, benchmark=args.benchmark_input_type)
     # Create Genetic Algorithm solver object
     model = GeneticSolver(problem)
     # Solve the problem
-    solution = model.solve(intermediate_prints=False)
+    solution = model.solve(intermediate_prints=args.benchmark_input_type)
     # Print out the solution
     model.show(solution)
     json_data = model.create_output_json(solution)
 
-    # the json file where the output must be stored
-    out_file = open(r"../data/output.json", "w")
+    # Generate output
+    out_file = open(args.output_filename, "w")
     json.dump(json_data, out_file, indent=6)
     out_file.close()
 
