@@ -24,11 +24,11 @@ Create a new enviroment and install required packages:
         pip install -r requirements.txt
 Run script with this command:
 ::
-        python main.py -i ../data/input.json --intermediate_prints -o ../data/output.json
+        python -m deliver.main -i ./data/input.json --intermediate_prints -o ./data/output.json
 
 To use `Cordeau’s Instances <https://github.com/fboliveira/MDVRP-Instances/blob/master/DESCRIPTION.mdL>`_ please use related input data and set ``--benchmark_input`` option.
 ::
-        python main.py -i ../data/p01 --intermediate_prints --benchmark_input -o ../data/output.json
+        python -m deliver.main -i ./data/p01 --intermediate_prints --benchmark_input -o ./data/output.json
 
 Output
 -------
