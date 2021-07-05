@@ -4,7 +4,7 @@
 =========================
 Deliver
 =========================
-A genetic algorithm implementation for the Multi Depot Vehicle Routing Problem.
+A genetic algorithm implementation for Multi Depot Vehicle Routing Problem.
 
 Details
 ------
@@ -14,7 +14,7 @@ Vehicles have a limited :
 - amount of stock
 - and predefined service durations.
 
-In this project has been developed with inspiration from the method written by Ombuki-Berman et al.
+This project has been developed with an inspiration from the method written by Ombuki-Berman et al.
 
         Ombuki-Berman, Beatrice, and Franklin T. Hanshar. "Using genetic algorithms for multi-depot vehicle routing." Bio-inspired algorithms for the vehicle routing problem. Springer, Berlin, Heidelberg, 2009. 77-99.
 Usage
@@ -32,7 +32,7 @@ To use `Cordeau’s Instances <https://github.com/fboliveira/MDVRP-Instances/blo
 
 Output
 -------
-Deliver produces a json file shown in ``data\output.json``. And the expected console output is shown below:
+"Deliver" produces a json file shown in ``data\output.json``. And the expected console output is shown below:
 ::
         [Generation 0] Best score: 0.00013974287311347122 Consistent: True
         [Generation 10] Best score: 0.00018422991893883567 Consistent: True
