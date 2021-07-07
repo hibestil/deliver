@@ -20,8 +20,9 @@ class ProblemHelper:
     def __init__(self, file_path, benchmark=False):
         """
         Init class
-        @param file_path: Input file path
-        @param benchmark: Defines the type of input file format.
+        Args:
+            file_path: Input file path
+            benchmark: Defines the type of input file format.
                           If json input will be used this value is False,
                           else if Cordeau’s Instances will be used it must be True
         """
@@ -37,20 +38,25 @@ class ProblemHelper:
     def read_json(file_path):
         """
         Returns JSON object as a dictionary
-        @param file_path: json file path
-        @return: JSON object
+        Args:
+            file_path: json file path
+
+        Returns:
+            JSON object
         """
         f = open(file_path, )
         return json.load(f)
 
     def get_from_benchmark(self, path):
         """
-       Reads benchmarking set (Cordeau’s Instances) to use in algorithm.
+        Reads benchmarking set (Cordeau’s Instances) to use in algorithm.
         References :
             - [1] http://neo.lcc.uma.es/vrp/vrp-instances/description-for-files-of-cordeaus-instances/
             - [2] https://github.com/fboliveira/MDVRP-Instances
-        @param path: Benchmark input file path
-        @return: vehicles, m, depots, customers data
+        Args:
+            path: Benchmark input file path
+        Returns:
+             vehicles, m, depots, customers data
         """
         depots = []
         customers = []
@@ -102,16 +108,19 @@ class ProblemHelper:
     def point_distance(p1, p2):
         """
         Measure euclidean distance two points p1 and p2.
-        @param p1: First point
-        @param p2: Second point
-        @return: Distance between points
+        Args:
+            p1: First point
+            p2: Second point
+        Returns:
+             Distance between points
         """
         return math.sqrt(((p1[0] - p2[0]) ** 2) + ((p1[1] - p2[1]) ** 2))
 
     def get(self):
         """
         Allows to get structured data from object
-        @return: vehicles, jobs, matrix, depots, customers
+        Returns:
+             vehicles, jobs, matrix, depots, customers
         """
         if self.data:
             vehicles = [Vehicle(**v) for v in self.data["vehicles"]]
@@ -127,8 +136,10 @@ class ProblemHelper:
     def define_depots(vehicles):
         """
         Converts vehicle objects to depot instances.
-        @param vehicles: List of vehicle objects
-        @return: List of depot objects
+        Args:
+            vehicles: List of vehicle objects
+        Returns:
+             List of depot objects
         """
         return [Depot(d.start_index, 2, inf, d.capacity[0]) for d in vehicles]
         # n_vehicles_in_depot = Counter(depot_idxs)
@@ -138,6 +149,7 @@ class ProblemHelper:
     def define_customers(jobs):
         """
         Converts job objects to customer instances.
-        @rtype: List of Customer objects
+        Returns:
+             List of Customer objects
         """
         return [Customer(index, j.service, j.delivery[0], j.location_index) for index, j in enumerate(jobs)]
