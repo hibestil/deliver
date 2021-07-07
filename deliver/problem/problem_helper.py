@@ -142,8 +142,6 @@ class ProblemHelper:
              List of depot objects
         """
         return [Depot(d.start_index, 2, inf, d.capacity[0]) for d in vehicles]
-        # n_vehicles_in_depot = Counter(depot_idxs)
-        # return [Depot(d, inf, inf, d) for d in list(set(depot_idxs))]
 
     @staticmethod
     def define_customers(jobs):
