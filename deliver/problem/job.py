@@ -1,4 +1,5 @@
 class Job:
+    """A class used to represent a job object"""
     job_id = None  # Order id
     location_index = None  # Index of the order location
     delivery = None  # The amount of carboy that will be delivered in this job

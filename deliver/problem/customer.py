@@ -1,4 +1,6 @@
 class Customer:
+    """A class used to represent a Customer object"""
+
     def __init__(self, cid, service_duration, demand, location_index):
         self.id = cid
         self.service_duration = service_duration
