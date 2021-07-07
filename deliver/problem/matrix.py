@@ -1,5 +1,7 @@
 import numpy as np
+
 class Matrix:
+    """A class used to represent a distance matrix object"""
     data = None
 
     def __init__(self, data):

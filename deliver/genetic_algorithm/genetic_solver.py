@@ -8,6 +8,7 @@ from deliver.problem.customer import Customer
 
 
 class GeneticSolver(ProblemSolver):
+    """A class used to represent a Genetic Algorithm based VRP Problem Solver"""
     groups = None
     population = []
 
@@ -15,10 +16,10 @@ class GeneticSolver(ProblemSolver):
                  random_portion=0,
                  generations=2500,
                  population_size=50,
-                 crossover_rate=0.05,
-                 heuristic_mutate_rate=0.05,
-                 inversion_mutate_rate=0.05,
-                 depot_move_mutate_rate=0,
+                 crossover_rate=0.60,
+                 heuristic_mutate_rate=0.20,
+                 inversion_mutate_rate=0.25,
+                 depot_move_mutate_rate=0.25,
                  best_insertion_mutate_rate=0.1,
                  route_merge_rate=0.05,
                  ):
@@ -38,70 +39,86 @@ class GeneticSolver(ProblemSolver):
         self.initialize_population()
 
     def solve(self, log=True, intermediate_prints=True):
+        """
+        Solves the defined vrp problem
+        Args:
+            log: Terminal logging option. Shows logs if True
+            intermediate_prints: Option for printing intermediate route solutions
 
+        Returns:
+            Best solution
+        """
+        # Iterate generations
         for g in range(self.generations):
+            # Log in every 10 generation
             if log and g % 10 == 0:
                 best = max(self.population, key=lambda x: x[1])
                 print('[Generation {}] Best score: {} Consistent: {}'
                       .format(g, best[1], self.is_consistent(best[0])))
-
+            # Print intermediate route plans in every 100 generation
             if intermediate_prints and g % 100 == 0:
                 self.population.sort(key=lambda x: -x[1])
                 self.show(self.population[0][0])
-
+            # Do selection
             selection = self.select(
                 self.heuristic_mutate_rate + self.inversion_mutate_rate
                 + self.crossover_rate + self.depot_move_mutate_rate
                 + self.best_insertion_mutate_rate
                 + self.route_merge_rate)
+            # Map and Convert selection to list
             selection = list(map(lambda x: x[0], selection))
 
+            # Apply Crossover
             offset = 0
-            for i in range(
-                int((self.population_size * self.crossover_rate) / 2)):
+            for i in range(int((self.population_size * self.crossover_rate) / 2)):
                 p1, p2 = selection[2 * i + offset], selection[
                     2 * i + 1 + offset]
                 self.crossover(p1, p2)
                 self.crossover(p2, p1)
             offset += int(self.population_size * self.crossover_rate)
 
-            for i in range(
-                int(self.population_size * self.heuristic_mutate_rate)):
+            # Apply Heuristic Mutate
+            for i in range(int(self.population_size * self.heuristic_mutate_rate)):
                 self.heuristic_mutate(selection[i + offset])
             offset += int(self.population_size * self.heuristic_mutate_rate)
 
-            for i in range(
-                int(self.population_size * self.inversion_mutate_rate)):
+            # Apply Inversion Mutate
+            for i in range(int(self.population_size * self.inversion_mutate_rate)):
                 self.inversion_mutate(selection[i + offset])
             offset += int(self.population_size * self.inversion_mutate_rate)
 
-            for i in range(
-                int(self.population_size * self.depot_move_mutate_rate)):
+            # Apply Depot Mutate
+            for i in range(int(self.population_size * self.depot_move_mutate_rate)):
                 self.depot_move_mutate(selection[i + offset])
             offset += int(self.population_size * self.depot_move_mutate_rate)
 
-            for i in range(
-                int(self.population_size * self.best_insertion_mutate_rate)):
+            # Apply Insertion Mutate
+            for i in range(int(self.population_size * self.best_insertion_mutate_rate)):
                 self.best_insertion_mutate(selection[i + offset])
-            offset += int(
-                self.population_size * self.best_insertion_mutate_rate)
+            offset += int(self.population_size * self.best_insertion_mutate_rate)
 
+            # Apply Route Merge
             for i in range(int(self.population_size * self.route_merge_rate)):
                 self.route_merge(selection[i + offset])
             offset += int(self.population_size * self.route_merge_rate)
 
+            # Select population
             self.population = self.select(1.0, elitism=4)
 
+        # Sort Population
         self.population.sort(key=lambda x: -x[1])
         print("\n\nFinished training")
 
         best_solution = None
+        # Check consistency of the first population instance
         if self.is_consistent(self.population[0][0]):
             print('Best score: {}, best distance: {}'.format(
                 self.population[0][1],
                 self.evaluate(self.population[0][0], True)))
+            # Select as best solution
             best_solution = self.population[0][0]
         else:
+            # Check all population instance consistencies while found a consistent one.
             for c in self.population:
                 if self.is_consistent(c[0]):
                     print('Best score: {}, best distance: {}'.format(
@@ -110,19 +127,23 @@ class GeneticSolver(ProblemSolver):
                     break
             else:
                 print('Found no consistent solutions.')
-        # if best_solution:
-        #     plot(best_solution)
+
         return best_solution
 
     def group_customers(self):
+        """
+        Group customers by proximity to depots
+        """
         self.groups = [[] for i in range(len(self.problem.depots))]
         # Group customers to closest depot
         for c in self.problem.customers:
             depot, depot_index, dist = self.find_closest_depot(c)
             self.groups[depot_index].append(c.id)
-        print(self.groups)
 
     def find_closest_depot(self, customer):
+        """
+        Find closest depot to specified Customer
+        """
         closest_depot = None
         closest_distance = -1
         for i, depot in enumerate(self.problem.depots):
@@ -136,6 +157,10 @@ class GeneticSolver(ProblemSolver):
         return closest_depot[0], closest_depot[1], closest_distance
 
     def distance(self, source, destination):
+        """
+        Gives the distance between given Customer and Depot objects.
+        """
+        # Correct location index if one of source/destination is a Customer instance.
         s_id = source.id
         d_id = destination.id
         if isinstance(source, Customer):
@@ -146,6 +171,11 @@ class GeneticSolver(ProblemSolver):
         return self.problem.matrix.data[s_id][d_id]
 
     def show(self, chromosome):
+        """
+        Print out the route plan for given chromosome
+        Args
+            chromosome: Chromosome of the route solution
+        """
         routes = self.decode(chromosome)
         total_duration = self.evaluate(chromosome, True)
 
@@ -158,7 +188,16 @@ class GeneticSolver(ProblemSolver):
                     self.print_route_info(d, route, depot)
 
     def print_route_info(self, d, route, depot):
+        """
+        Prints vehicle and route plan
+        Args:
+            d: current depot index
+            route: a list of customers in route array
+            depot: current depot object
+        """
+        # Calculate given route length and load
         route_length, route_load = self.evaluate_route(route, depot, True)
+
         customers = self.problem.customers
         end_depot = self.find_closest_depot(customers[route[-1]])[1]
 
@@ -175,6 +214,14 @@ class GeneticSolver(ProblemSolver):
         print("\t|_ Total duration of this trip is ", route_length)
 
     def create_output_json(self, chromosome):
+        """
+        Create expected output json.
+        Args:
+            chromosome: given solution chromosome
+
+        Returns:
+            JSON formatted output object.
+        """
         routes = self.decode(chromosome)
         total_duration = self.evaluate(chromosome, True)
 
@@ -197,7 +244,17 @@ class GeneticSolver(ProblemSolver):
                     counter = counter + 1
         output["routes"] = routes_json
         return output
+
     def encode(self, routes):
+        """
+        Creates chromosome from routes array
+        Example :   routes = [[[1, 2, 5, 6, 4, 0]], [], [[3]]]
+                    chromosome = [1, 2, 5, 6, 4, 0, -1, -1, 3]
+        Args:
+            routes: given routes array
+        Returns:
+            chromosome formatted routes array
+        """
         chromosome = []
         for d in range(len(routes)):
             if d != 0:
@@ -209,6 +266,15 @@ class GeneticSolver(ProblemSolver):
         return chromosome
 
     def decode(self, chromosome):
+        """
+        Creates routes array from chromosome
+        Example :   chromosome = [1, 2, 5, 6, 4, 0, -1, -1, 3]
+                    routes = [[[1, 2, 5, 6, 4, 0]], [], [[3]]]
+        Args:
+            chromosome: given chromosome
+        Returns:
+            routes
+        """
         routes = [[[]]]
         d = 0
         r = 0
@@ -225,6 +291,14 @@ class GeneticSolver(ProblemSolver):
         return routes
 
     def schedule_route(self, route):
+        """
+        Schedules the route. If route is empty creates a new route
+        Args:
+            route:
+
+        Returns:
+            Scheduled route
+        """
         if not len(route):
             return route
         new_route = []
@@ -241,6 +315,15 @@ class GeneticSolver(ProblemSolver):
         return new_route
 
     def is_consistent(self, chromosome):
+        """
+        Checks consistency of given chromosome
+        Args:
+            chromosome:
+
+        Returns:
+            Boolean bonsistency value
+
+        """
         for c in self.problem.customers:
             if c.id not in chromosome:
                 return False
@@ -257,6 +340,16 @@ class GeneticSolver(ProblemSolver):
         return True
 
     def is_consistent_route(self, route, depot, include_reason=True):
+        """
+        Checks consistency of given route
+        Args:
+            route: The route that the vehicle will trip
+            depot: The depot (vehicle)
+            include_reason: Flag for restriction applications
+
+        Returns:
+            Consistency value of given route-depot pair
+        """
         route_load = 0
         route_duration = 0
         last_pos = depot
@@ -279,6 +372,10 @@ class GeneticSolver(ProblemSolver):
             depot.max_duration == 0 or route_duration <= depot.max_duration)
 
     def initialize_population(self):
+        """
+        Initialize the population.
+        Here we're creating chromosomes by using heuristic and random chromosome generations.
+        """
         for x in range(int(self.population_size * (1 - self.random_portion))):
             chromosome = self.create_heuristic_chromosome(self.groups)
             self.population.append((chromosome, self.evaluate(chromosome)))
@@ -288,6 +385,14 @@ class GeneticSolver(ProblemSolver):
             self.population.append((chromosome, self.evaluate(chromosome)))
 
     def create_heuristic_chromosome(self, groups):
+        """
+        Creates chromosomes by using heuristic way.
+        Args:
+            groups: initial depot-customer pairs. i.e = [[1,2],[3,6],[4,5,7]]
+
+        Returns:
+            Heuristically created chromosome
+        """
         depots = self.problem.depots
         customers = self.problem.customers
         # Group customers in routes according to savings
@@ -375,6 +480,14 @@ class GeneticSolver(ProblemSolver):
         return chromosome
 
     def create_random_chromosome(self, groups):
+        """
+        Creates chromosomes by using random way.
+        Args:
+            groups: initial depot-customer pairs. i.e = [[1,2],[3,6],[4,5,7]]
+
+        Returns:
+            Randomly created chromosome
+        """
         routes = []
         for d in range(len(groups)):
             depot = self.problem.depots[d]
@@ -429,6 +542,15 @@ class GeneticSolver(ProblemSolver):
         self.population.append((protochild, self.evaluate(protochild)))
 
     def evaluate(self, chromosome, return_distance=False):
+        """
+        The chromosome cost function implementation for proposed genetic algorithm.
+        Args:
+            chromosome: The chromosome that needs to be evaluated
+            return_distance: Returns distance if the value is True
+
+        Returns:
+            Distance or score (depending on return_distance option value)
+        """
         for c in self.problem.customers:
             if c.id not in chromosome:
                 if return_distance:
@@ -454,6 +576,16 @@ class GeneticSolver(ProblemSolver):
         return 1 / score
 
     def evaluate_route(self, route, depot, return_load=False):
+        """
+       The route cost function implementation for proposed genetic algorithm.
+        Args:
+            route: The route that needs to be evaluated.
+            depot: The depot that needs to be evaluated.
+            return_load: If evaluated load needed, this value should set True
+
+        Returns:
+            Route length and load
+        """
         if len(route) == 0:
             if return_load:
                 return 0, 0
@@ -475,6 +607,15 @@ class GeneticSolver(ProblemSolver):
         return route_length
 
     def select(self, portion, elitism=0):
+        """
+        Apply selection operation on population.
+        Args:
+            portion:
+            elitism:
+
+        Returns:
+            Selected portion
+        """
         total_fitness = sum(map(lambda x: x[1], self.population))
         weights = list(
             map(lambda x: (total_fitness - x[1]) / (
@@ -488,6 +629,11 @@ class GeneticSolver(ProblemSolver):
         return selection
 
     def heuristic_mutate(self, p):
+        """
+        Applies heuristic mutate operation on given population.
+        Args:
+            p: population
+        """
         g = []
         for i in range(3):
             g.append(int(random.random() * len(p)))
@@ -505,6 +651,11 @@ class GeneticSolver(ProblemSolver):
         self.population.append(selected_offspring)
 
     def inversion_mutate(self, p):
+        """
+        Applies inversion mutate operation on given population.
+        Args:
+            p: population
+        """
         cut1 = int(random.random() * len(p))
         cut2 = int(cut1 + random.random() * (len(p) - cut1))
 
@@ -517,6 +668,11 @@ class GeneticSolver(ProblemSolver):
         self.population.append((child, self.evaluate(child)))
 
     def best_insertion_mutate(self, p):
+        """
+        Applies best insertion mutate operation on given population.
+        Args:
+            p: population
+        """
         g = int(random.random() * len(p))
 
         best_child = None
@@ -534,6 +690,11 @@ class GeneticSolver(ProblemSolver):
         self.population.append((best_child, best_score))
 
     def depot_move_mutate(self, p):
+        """
+        Applies depot move mutate operation on given population.
+        Args:
+            p: population
+        """
         if -1 not in p:
             return
         i = int(random.random() * len(p))
@@ -549,6 +710,11 @@ class GeneticSolver(ProblemSolver):
         self.population.append((child, self.evaluate(child)))
 
     def route_merge(self, p):
+        """
+        Merges route of given population chromosome p.
+        Args:
+            p: population
+        """
         routes = self.decode(p)
 
         d1 = int(random.random() * len(routes))

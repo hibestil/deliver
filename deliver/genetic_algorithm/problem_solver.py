@@ -1,4 +1,5 @@
 class ProblemSolver:
+    """A class used to represent a VRP Problem Solver base class"""
     problem = None
     customers = []
 
