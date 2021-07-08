@@ -4,7 +4,7 @@
 =========================
 Deliver
 =========================
-A genetic algorithm and brute force method implementation for Multi Depot Vehicle Routing Problem.
+Genetic algorithm and brute force method implementations for Multi Depot Vehicle Routing Problem.
 
 Details
 ------
