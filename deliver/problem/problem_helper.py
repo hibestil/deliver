@@ -12,9 +12,20 @@ from deliver.problem.vehicle import Vehicle
 
 
 class ProblemHelper:
+    """
+    Problem helper class allows user to read and structure the input files.
+    """
     data = None
 
     def __init__(self, file_path, benchmark=False):
+        """
+        Init class
+        Args:
+            file_path: Input file path
+            benchmark: Defines the type of input file format.
+                          If json input will be used this value is False,
+                          else if Cordeau’s Instances will be used it must be True
+        """
         if not benchmark:
             self.data = self.read_json(file_path)
             self.vehicles, self.jobs, \
@@ -27,8 +38,11 @@ class ProblemHelper:
     def read_json(file_path):
         """
         Returns JSON object as a dictionary
-        @param file_path: json file path
-        @return: JSON object
+        Args:
+            file_path: json file path
+
+        Returns:
+            JSON object
         """
         f = open(file_path, )
         return json.load(f)
@@ -39,6 +53,10 @@ class ProblemHelper:
         References :
             - [1] http://neo.lcc.uma.es/vrp/vrp-instances/description-for-files-of-cordeaus-instances/
             - [2] https://github.com/fboliveira/MDVRP-Instances
+        Args:
+            path: Benchmark input file path
+        Returns:
+             vehicles, m, depots, customers data
         """
         depots = []
         customers = []
@@ -88,9 +106,22 @@ class ProblemHelper:
 
     @staticmethod
     def point_distance(p1, p2):
+        """
+        Measure euclidean distance two points p1 and p2.
+        Args:
+            p1: First point
+            p2: Second point
+        Returns:
+             Distance between points
+        """
         return math.sqrt(((p1[0] - p2[0]) ** 2) + ((p1[1] - p2[1]) ** 2))
 
     def get(self):
+        """
+        Allows to get structured data from object
+        Returns:
+             vehicles, jobs, matrix, depots, customers
+        """
         if self.data:
             vehicles = [Vehicle(**v) for v in self.data["vehicles"]]
             jobs = [Job(**j) for j in self.data["jobs"]]
@@ -103,10 +134,20 @@ class ProblemHelper:
 
     @staticmethod
     def define_depots(vehicles):
+        """
+        Converts vehicle objects to depot instances.
+        Args:
+            vehicles: List of vehicle objects
+        Returns:
+             List of depot objects
+        """
         return [Depot(d.start_index, 2, inf, d.capacity[0]) for d in vehicles]
-        # n_vehicles_in_depot = Counter(depot_idxs)
-        # return [Depot(d, inf, inf, d) for d in list(set(depot_idxs))]
 
     @staticmethod
     def define_customers(jobs):
+        """
+        Converts job objects to customer instances.
+        Returns:
+             List of Customer objects
+        """
         return [Customer(index, j.service, j.delivery[0], j.location_index) for index, j in enumerate(jobs)]

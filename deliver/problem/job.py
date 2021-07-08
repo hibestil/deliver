@@ -1,4 +1,5 @@
 class Job:
+    """A class used to represent a job object"""
     job_id = None  # Order id
     location_index = None  # Index of the order location
     delivery = None  # The amount of carboy that will be delivered in this job
@@ -9,6 +10,9 @@ class Job:
         self.location_index = location_index
         self.delivery = delivery
         self.service = service
+
+    def __repr__(self):
+        return self.__str__()
 
     def __str__(self):
         str = "[Job] :"

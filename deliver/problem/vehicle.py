@@ -1,4 +1,5 @@
 class Vehicle:
+    """A class used to represent a Vehicle object"""
     vehicle_id = None  # Vehicle id
     start_index = None  # Index of the vehicle’s starting location
     capacity = 0  # Initial carboy capacity of the vehicle
