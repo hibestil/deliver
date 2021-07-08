@@ -11,6 +11,9 @@ class Job:
         self.delivery = delivery
         self.service = service
 
+    def __repr__(self):
+        return self.__str__()
+
     def __str__(self):
         str = "[Job] :"
         str += "\tid:{}".format(self.job_id)

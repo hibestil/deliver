@@ -4,7 +4,7 @@
 =========================
 Deliver
 =========================
-A genetic algorithm implementation for Multi Depot Vehicle Routing Problem.
+A genetic algorithm and brute force method implementation for Multi Depot Vehicle Routing Problem.
 
 Details
 ------
@@ -30,57 +30,28 @@ To use `Cordeau’s Instances <https://github.com/fboliveira/MDVRP-Instances/blo
 ::
         python -m deliver.main -i ./data/p01 --intermediate_prints --benchmark_input -o ./data/output.json
 
+To use brute force method add ``--brute_force`` to the command:
+::
+        python -m deliver.main -i ./data/input.json --intermediate_prints --brute_force -o ./data/output.json
+
+
 Output
 -------
-"Deliver" produces a json file shown in ``data\output.json``. And the expected console output is shown below:
-::
-        [Generation 0] Best score: 0.00013974287311347122 Consistent: True
-        [Generation 10] Best score: 0.00018422991893883567 Consistent: True
-        .
-        .
-        .
-        [Generation 2470] Best score: 0.00018422991893883567 Consistent: True
-        [Generation 2480] Best score: 0.00018422991893883567 Consistent: True
-        [Generation 2490] Best score: 0.00018422991893883567 Consistent: True
+"Deliver" produces a json file shown in ``data\output.json``.
 
-
-        Finished training
-        Best score: 0.00018422991893883567, best distance: 5428
-        -----------------------SUMMARY-----------------------
-        Total duration : 5428
-        ----------------------------------------------------
-        Vehicle : 0
-            |_ Leaves from depot 0
-            |_ Amount of carried load by this vehicle is :  4
-            |_ Goes to these customers respectively :
-                |_ customer: 4	demand:1
-                |_ customer: 7	demand:1
-                |_ customer: 8	demand:1
-                |_ customer: 5	demand:1
-            |_ Vehicle returns to the depot 0
-            |_ Total duration of this trip is  3757
-        ----------------------------------------------------
-        Vehicle : 1
-            |_ Leaves from depot 1
-            |_ Amount of carried load by this vehicle is :  1
-            |_ Goes to these customers respectively :
-                |_ customer: 9	demand:1
-            |_ Vehicle returns to the depot 0
-            |_ Total duration of this trip is  1209
-        ----------------------------------------------------
-        Vehicle : 2
-            |_ Leaves from depot 2
-            |_ Amount of carried load by this vehicle is :  2
-            |_ Goes to these customers respectively :
-                |_ customer: 6	demand:2
-            |_ Vehicle returns to the depot 2
-            |_ Total duration of this trip is  462
-
-        Process finished with exit code 0
-
-
-``
-
+Example outputs can be found in data folder.
+    - ``data/output_brute_force_with_no_constraint.json`` for brute-force approach. In this example that is assumed:
+            - There is no predefined service durations
+            - Vehicles have infinite capacity
+    - ``data/output_brute_force_with_predefined_service_duration.json``
+            - Included predefined service durations
+            - Vehicles have infinite capacity. There is no capacity constraint
+    - ``data/output_brute_force_with_capacity_constraint_and_predefined_service_duration.json``
+            - Included capacity constraint
+            - Included predefined service durations
+    - ``data/output_genetic_algoritm_with_capacity_constraint_and_predefined_service_duration.json`` for genetic algorithm approach.
+            - Included capacity constraint
+            - Included predefined service durations
 Installation for Development
 ------------
 #. Install the project's development and runtime requirements::
